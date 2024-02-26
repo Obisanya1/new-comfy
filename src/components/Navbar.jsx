@@ -1,14 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BsCart3, BsMoonFill, BsSunFill } from "react-icons/bs";
 import { FaBarsStaggered } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
 import NavLinks from "./../components/NavLinks";
 
+const themes = {
+    winter : 'winter',
+    dracula : 'dracula'
+}
+
+const getThemeFromLocalStorage = () => {
+    return localStorage.getItem('theme') || themes.winter
+}
+
 const Navbar = () => {
-  const [theme, setTheme] = useState(false);
+  const [theme, setTheme] = useState(getThemeFromLocalStorage);
   const handleTheme = () => {
-    setTheme(!theme);
+    const {winter, dracula} = themes
+    const newTheme = theme === winter ? dracula : winter;
+    document.documentElement.setAttribute('data-theme', theme);
+    setTheme(newTheme);
   };
+
+  useEffect(()=> {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme)
+  }, [theme])
+
   return (
     <nav className="bg-base-200">
       <div className="navbar align-element">
@@ -16,7 +34,7 @@ const Navbar = () => {
           {/* TITLE */}
           <NavLink
             to="/"
-            className="hidden lg:flex btn btn-primary text-3xl items-center"
+            className="hidden lg:flex btn btn-primary text-3xl items-center capitalize"
           >
             C
           </NavLink>
